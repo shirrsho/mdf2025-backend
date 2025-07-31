@@ -1,0 +1,15 @@
+export enum Role {
+  USER = 'user',
+  ADMIN = 'admin',
+  MODERATOR = 'moderator',
+  INSTRUCTOR = 'instructor',
+  AUTHOR = 'author',
+  GUEST = 'guest',
+  GUEST_ADMIN = 'guest_admin',
+  GUEST_MODERATOR = 'guest_moderator',
+  GUEST_INSTRUCTOR = 'guest_instructor',
+  GUEST_AUTHOR = 'guest_author',
+  GUEST_USER = 'guest_user',
+  GUEST_STUDENT = 'guest_student',
+  TEMP = 'temp',
+}

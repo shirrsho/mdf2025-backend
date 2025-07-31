@@ -1,0 +1,23 @@
+branch_name=$(git symbolic-ref --short HEAD)
+
+branch_regex="^(feature|bugfix|hotfix|release)\/[a-z0-9]+\/[a-z0-9_\-]+$"
+
+if [[ $branch_name == "dev" || $branch_name == "stable" || $branch_name == "features" || $branch_name == *"-dev" || $branch_name == *"-stable" ]]; then
+  echo "Branch name '$branch_name'"
+else
+  echo "Branch name '$branch_name'"
+  if [[ ! $branch_name =~ $branch_regex ]]; then
+    echo "Error: Branch name '$branch_name' is invalid."
+    echo "Branch names must follow the format: <type>/<developer-name>/<description>"
+    echo "Examples:"
+    echo "  feature/shirsho/new-feature"
+    echo "  bugfix/shirsho/fix-issue"
+    echo "  release/shirsho/v1.0.0"
+    echo ""
+    echo "Exceptions: Allowed branch names are 'dev', '*-stable', and 'features'."
+    exit 1
+  fi
+fi
+
+pnpm test
+pnpm build

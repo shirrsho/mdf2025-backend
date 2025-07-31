@@ -1,0 +1,4216 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "summary": "ping",
+        "description": "Check backend",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Hello World!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Hello World!"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Hello World!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/ping"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail": {
+      "post": {
+        "operationId": "MailSenderController_create",
+        "summary": "Create a new credentials",
+        "description": "Create a new credentials if mandatory fields are present",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMailCredDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Credentials created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Credentials saved successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "MailSenderController_get",
+        "summary": "check if creds are provided",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Credentials found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Credentials found"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Creds not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "MailSenderController_delete",
+        "summary": "delete creds",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Credentials deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Credentials deleted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Creds not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/seed/admin": {
+      "post": {
+        "operationId": "AuthGeneralController_seedAdmin",
+        "summary": "Seed first account",
+        "description": "Create an admin account with provided data if correct",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create an admin account with provided data if correct",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Already created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth",
+          "v1/seed"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/account/guest": {
+      "post": {
+        "operationId": "AuthGeneralController_createGuestAccount",
+        "summary": "Create an guest account with correct access key",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGuestAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create an guest account with correct access key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Misssing key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth",
+          "v1/guest"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/user": {
+      "get": {
+        "operationId": "AuthGeneralController_getUser",
+        "summary": "Get Logged in user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get Logged in user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorize",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/optional-user": {
+      "get": {
+        "operationId": "AuthGeneralController_getOptionalUser",
+        "summary": "Get Logged in user optional",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get Logged in user optional",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/check-email": {
+      "post": {
+        "operationId": "AuthGeneralController_isExistingUser",
+        "summary": "Check email exist in database",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Is existing user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "existinguser": true
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/update": {
+      "post": {
+        "operationId": "AuthGeneralController_updateUser",
+        "summary": "Update an account with provided data if correct",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create an account with provided data if correct"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/register": {
+      "post": {
+        "operationId": "AuthGeneralController_register",
+        "summary": "Create an account with provided data if correct",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create an account with provided data if correct",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/login": {
+      "post": {
+        "operationId": "AuthGeneralController_login",
+        "summary": "Logs in user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logs in user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "token": "token"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth",
+          "v1/login"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/refresh-token": {
+      "post": {
+        "operationId": "AuthGeneralController_refreshToken",
+        "summary": "Refersh token",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "token": "token"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Refresh user token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "accessToken": "token"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/forgot-password": {
+      "post": {
+        "operationId": "AuthGeneralController_forgetPassword",
+        "summary": "Sent forget-password otp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sent forget-password otp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "message": "An email is sent at XXXXXXXXXXXXXX"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/receive-otp": {
+      "post": {
+        "operationId": "AuthGeneralController_receiveOtp",
+        "summary": "Verify otp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verify otp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "isVerified": true,
+                    "message": "Otp verification success"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid otp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/otp-newpassword": {
+      "post": {
+        "operationId": "AuthGeneralController_setNewPassword",
+        "summary": "Set new password with otp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordOtpAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Set new password with otp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "message": "User password change success"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid otp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/isloggedin": {
+      "get": {
+        "operationId": "AuthGeneralController_isLoggedin",
+        "summary": "Check User Login",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Check User Login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/logout": {
+      "get": {
+        "operationId": "AuthGeneralController_logout",
+        "summary": "Logs out user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Logs out user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/local/role": {
+      "get": {
+        "operationId": "AuthGeneralController_getRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "success",
+                    "role": [
+                      "user"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/seed": {
+      "get": {
+        "operationId": "UserCurdController_seed",
+        "summary": "Seed user",
+        "description": "Seeds initial user data.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User data seeded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Access denied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/count": {
+      "get": {
+        "operationId": "UserCurdController_count",
+        "summary": "Get user count",
+        "description": "Retrieve the total count of users based on query parameters.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User count retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number",
+                  "example": 10
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/options": {
+      "get": {
+        "operationId": "UserCurdController_options",
+        "summary": "Get user options",
+        "description": "Fetch user options based on query parameters.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User options retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": [
+                    {
+                      "label": "user.name",
+                      "value": "user._id",
+                      "imageUrl": "user.imageUrl",
+                      "description": "user.description"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user": {
+      "get": {
+        "operationId": "UserCurdController_findAll",
+        "summary": "Get all users",
+        "description": "Retrieve a paginated list of all users.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "UserCurdController_create",
+        "summary": "Create a new user",
+        "description": "Create a new user in the system.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/{id}": {
+      "get": {
+        "operationId": "UserCurdController_findById",
+        "summary": "Get user by ID",
+        "description": "Retrieve a user by their unique ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "UserCurdController_update",
+        "summary": "Update user by ID",
+        "description": "Update an existing user by their ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User verification failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "UserCurdController_delete",
+        "summary": "Delete user by ID",
+        "description": "Delete a user by their unique ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/verify/{id}": {
+      "put": {
+        "operationId": "UserGeneralController_verifyUser",
+        "summary": "Update user by ID by admin",
+        "description": "Update user by ID from given fields",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/adduser": {
+      "post": {
+        "operationId": "UserGeneralController_create",
+        "summary": "Create a new user by admin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/adduser/{id}": {
+      "put": {
+        "operationId": "UserGeneralController_update",
+        "summary": "Update user by ID by admin",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User role and status added successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/user"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/routes/refresh": {
+      "post": {
+        "operationId": "RoutesGeneralController_root",
+        "summary": "Refresh paths",
+        "description": "Create all paths",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Path refreshed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "message": "Path refreshed successfully"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/routes"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/role-permission/name-option": {
+      "get": {
+        "operationId": "RolePermissionCrudController_nameOptions",
+        "summary": "Get all role options name",
+        "description": "Retrive all role options name.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Role options retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OptionDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/role-permission"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/role-permission/option": {
+      "get": {
+        "operationId": "RolePermissionCrudController_options",
+        "summary": "Get all role options",
+        "description": "Retrive all role options.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Role options retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OptionDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/role-permission"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/role-permission/{id}": {
+      "get": {
+        "operationId": "RolePermissionCrudController_findById",
+        "summary": "Get role by ID",
+        "description": "Retrive a role by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolePermission"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid role id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/role-permission"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "RolePermissionCrudController_update",
+        "summary": "Update role by ID",
+        "description": "Update role by ID from given fields",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRolePermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Role updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolePermission"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/role-permission"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "RolePermissionCrudController_delete",
+        "summary": "Delete role by ID",
+        "description": "Delete role by ID if present",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolePermission"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/role-permission"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/role-permission": {
+      "post": {
+        "operationId": "RolePermissionCrudController_create",
+        "summary": "Create a new role",
+        "description": "Create a new role if mandatory fields are present",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRolePermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Role created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolePermission"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/role-permission"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/template/count": {
+      "get": {
+        "operationId": "TemplateCrudController_count",
+        "summary": "Get template count",
+        "description": "Retrieve the total count of template based on query parameters.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "name": "Shirsho"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template count retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number",
+                  "example": 10
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not permitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/template/option": {
+      "get": {
+        "operationId": "TemplateCrudController_options",
+        "summary": "Get all template options",
+        "description": "Retrive all template options.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Template options retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OptionDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/template/public": {
+      "get": {
+        "operationId": "TemplateCrudController_findAllPublic",
+        "summary": "Get all public templates",
+        "description": "Retrive all public templates based on query parameters.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "name": "Shirsho"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Templates retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplatePaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/template": {
+      "get": {
+        "operationId": "TemplateCrudController_findAll",
+        "summary": "Get all templates",
+        "description": "Retrive all templates based on query parameters.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "name": "Shirsho"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Templates retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplatePaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not permitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "TemplateCrudController_create",
+        "summary": "Create a new template",
+        "description": "Create a new template if mandatory fields are present",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/template/public/{id}": {
+      "get": {
+        "operationId": "TemplateCrudController_findByIdPublic",
+        "summary": "Get public template by ID",
+        "description": "Retrive a template by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Template ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid template id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/template/{id}": {
+      "get": {
+        "operationId": "TemplateCrudController_findById",
+        "summary": "Get template by ID",
+        "description": "Retrive a template by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Template ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid template id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not permitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "TemplateCrudController_update",
+        "summary": "Update template by ID",
+        "description": "Update template by ID from given fields",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Template ID",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "TemplateCrudController_delete",
+        "summary": "Delete template by ID",
+        "description": "Delete template by ID if present",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Template ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Automation deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not permitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/template"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/notification/count": {
+      "get": {
+        "operationId": "NotificationGeneralController_count",
+        "summary": "Get total notification count",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification count retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number",
+                  "example": 10
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/notification"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/notification": {
+      "get": {
+        "operationId": "NotificationGeneralController_findAll",
+        "summary": "Get all notifications",
+        "description": "Retrive all notification based on query parameters.",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notifications retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/notification"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/notification/{id}/read": {
+      "patch": {
+        "operationId": "NotificationGeneralController_markAsRead",
+        "summary": "Mark notification as read",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Notification ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification marked as read successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid notification id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Notification not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/notification"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-blueprint/public": {
+      "get": {
+        "operationId": "MailBlueprintCurdController_findAllPublic",
+        "summary": "Get all public Mail Blueprints",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Blueprints retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprintPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-blueprint": {
+      "get": {
+        "operationId": "MailBlueprintCurdController_findAll",
+        "summary": "Get all Mail Blueprints",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Blueprints retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprintPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "MailBlueprintCurdController_create",
+        "summary": "Create a new mailBlueprint",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMailBlueprintDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mail Blueprint created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-blueprint/public/{id}": {
+      "get": {
+        "operationId": "MailBlueprintCurdController_findByIdPublic",
+        "summary": "Get public mailBlueprint by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailBlueprint ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Blueprint retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-blueprint/{id}": {
+      "get": {
+        "operationId": "MailBlueprintCurdController_findById",
+        "summary": "Get mailBlueprint by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailBlueprint ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Blueprint retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "MailBlueprintCurdController_update",
+        "summary": "Update mailBlueprint by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailBlueprint ID",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMailBlueprintDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mail Blueprint updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "MailBlueprintCurdController_delete",
+        "summary": "Delete mailBlueprint by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailBlueprint ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Blueprint deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailBlueprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-automation/public": {
+      "get": {
+        "operationId": "MailAutomationCurdController_findAllPublic",
+        "summary": "Get all public mail automations",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Automation retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomationPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      }
+    },
+    "/api/mail-automation": {
+      "get": {
+        "operationId": "MailAutomationCurdController_findAll",
+        "summary": "Get all mail automations",
+        "parameters": [
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "example": {
+                "query": {
+                  "select": {
+                    "name": true
+                  },
+                  "where": {
+                    "email": "hniqbal01@gmail.com"
+                  },
+                  "page": 1,
+                  "limit": 10
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Automation retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomationPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      },
+      "post": {
+        "operationId": "MailAutomationCurdController_create",
+        "summary": "Create a new mailAutomation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMailAutomationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mail Automation created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      }
+    },
+    "/api/mail-automation/public/{id}": {
+      "get": {
+        "operationId": "MailAutomationCurdController_findByIdPublic",
+        "summary": "Get public mailAutomation by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailAutomation ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Automation retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      }
+    },
+    "/api/mail-automation/{id}": {
+      "get": {
+        "operationId": "MailAutomationCurdController_findById",
+        "summary": "Get mailAutomation by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailAutomation ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Automation retrived successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      },
+      "put": {
+        "operationId": "MailAutomationCurdController_update",
+        "summary": "Update mailAutomation by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailAutomation ID",
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMailAutomationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mail Automation updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      },
+      "delete": {
+        "operationId": "MailAutomationCurdController_delete",
+        "summary": "Delete mailAutomation by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "MailAutomation ID",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mail Automation deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-automation",
+          "v1/mail-blueprint"
+        ]
+      }
+    },
+    "/api/mail-blueprint/add-automation-blueprint": {
+      "post": {
+        "operationId": "MailBlueprintGeneralController_addMailAutomationWithTemplate",
+        "summary": "Add a new blueprint and add it to automation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMailBlueprintAutomationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mail Blueprint and Automation created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-blueprint/add-automation": {
+      "post": {
+        "operationId": "MailBlueprintGeneralController_AddMailAutomation",
+        "summary": "Add or update an automation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMailAutomationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mail Automation created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailAutomation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/mail-blueprint/send-blueprint": {
+      "post": {
+        "operationId": "MailBlueprintGeneralController_sendBluePrintMail",
+        "summary": "Send email by blueprint",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMailBlueprintDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Send email by blueprint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "done"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing placeholders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/mail-blueprint"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Boilerplate v1 API",
+    "description": "Basic docs for API in version 1",
+    "version": "1.0",
+    "contact": {
+      "name": "Shirsho ",
+      "url": "https://marketron.com",
+      "email": "hniqbal01@gmail.com"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://localhost:4000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "ExceptionResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid request parameters"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2024-11-22T04:10:35.729Z"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/v1/resource"
+          }
+        },
+        "required": [
+          "statusCode",
+          "error",
+          "message",
+          "timestamp",
+          "path"
+        ]
+      },
+      "CreateMailCredDTO": {
+        "type": "object",
+        "properties": {
+          "smtpHost": {
+            "type": "string",
+            "example": "asd"
+          },
+          "smtpPort": {
+            "type": "string",
+            "example": "asd"
+          },
+          "smtpFrom": {
+            "type": "string",
+            "example": "asd"
+          },
+          "smtpUser": {
+            "type": "string",
+            "example": "asd"
+          },
+          "smtpPassword": {
+            "type": "string",
+            "example": "asd"
+          }
+        },
+        "required": [
+          "smtpHost",
+          "smtpPort",
+          "smtpFrom",
+          "smtpUser",
+          "smtpPassword"
+        ]
+      },
+      "CreateAuthDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho"
+          },
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          },
+          "rolePermission": {
+            "type": "string",
+            "example": "user"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User name",
+            "example": "shirsho"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "shirsho@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User phone",
+            "example": "1234567890"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "User image url",
+            "example": "image.jpg"
+          },
+          "description": {
+            "type": "string",
+            "description": "User description",
+            "example": "I am a developer"
+          },
+          "role": {
+            "description": "User role",
+            "example": [
+              "USER"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rolePermission": {
+            "type": "string",
+            "description": "User role permission",
+            "example": "user"
+          },
+          "isverified": {
+            "type": "boolean",
+            "description": "User is verified",
+            "example": false
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "imageUrl",
+          "description",
+          "role",
+          "rolePermission",
+          "isverified"
+        ]
+      },
+      "CreateGuestAccountDto": {
+        "type": "object",
+        "properties": {
+          "accountType": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "key": {
+            "type": "string",
+            "example": "11ece8be27491e39b6f940c18fa339ce4d2c9dadd94064898035e16ec27e7f76"
+          }
+        },
+        "required": [
+          "accountType",
+          "key"
+        ]
+      },
+      "EmailAuthDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho"
+          },
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          },
+          "phone": {
+            "type": "string",
+            "example": "01534115844"
+          },
+          "status": {
+            "type": "string",
+            "example": "active"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "imageUrl"
+          },
+          "description": {
+            "type": "string",
+            "example": "description"
+          },
+          "provider": {
+            "type": "string",
+            "example": "Google"
+          },
+          "providerId": {
+            "type": "string",
+            "example": "local"
+          },
+          "role": {
+            "example": "user",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rolePermission": {
+            "type": "string",
+            "example": "user"
+          }
+        }
+      },
+      "LoginAuthDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "VerifyEmailAuthDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "otp": {
+            "type": "string",
+            "example": "123456"
+          },
+          "removeotp": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "email",
+          "otp",
+          "removeotp"
+        ]
+      },
+      "ChangePasswordOtpAuthDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "otp": {
+            "type": "string",
+            "example": "123456"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "email",
+          "otp",
+          "password"
+        ]
+      },
+      "UserPaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho"
+          },
+          "email": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          },
+          "phone": {
+            "type": "string",
+            "example": "01534115844"
+          },
+          "status": {
+            "type": "string",
+            "example": "active"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "imageUrl"
+          },
+          "description": {
+            "type": "string",
+            "example": "description"
+          },
+          "provider": {
+            "type": "string",
+            "example": "Google"
+          },
+          "providerId": {
+            "type": "string",
+            "example": "local"
+          },
+          "role": {
+            "example": "user",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rolePermission": {
+            "type": "string",
+            "example": "user"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "phone",
+          "status",
+          "imageUrl",
+          "description",
+          "provider",
+          "providerId",
+          "role"
+        ]
+      },
+      "VerifyUserDto": {
+        "type": "object",
+        "properties": {
+          "isverified": {
+            "type": "boolean",
+            "example": "false"
+          }
+        },
+        "required": [
+          "isverified"
+        ]
+      },
+      "OptionDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "value": {
+            "type": "object",
+            "example": "Invalid request parameters"
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ]
+      },
+      "RolePermission": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateRolePermissionDto": {
+        "type": "object",
+        "properties": {
+          "roleName": {
+            "type": "string",
+            "example": "example image field"
+          },
+          "permissionList": {
+            "example": [
+              "example image field"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "roleName"
+        ]
+      },
+      "UpdateRolePermissionDto": {
+        "type": "object",
+        "properties": {
+          "roleName": {
+            "type": "string",
+            "example": "example image field"
+          },
+          "permissionList": {
+            "example": [
+              "example image field"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "roleName"
+        ]
+      },
+      "Template": {
+        "type": "object",
+        "properties": {
+          "templateName": {
+            "type": "string",
+            "example": "Template name",
+            "description": "Template name"
+          },
+          "slug": {
+            "type": "string",
+            "example": "Template slug",
+            "description": "Template slug"
+          }
+        },
+        "required": [
+          "templateName"
+        ]
+      },
+      "TemplatePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Template"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ]
+      },
+      "CreateTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho",
+            "description": "Name of the template"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho",
+            "description": "Name of the template"
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {}
+      },
+      "NotificationPaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Notification"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 2
+          },
+          "unreadCount": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "unreadCount"
+        ]
+      },
+      "MailBlueprint": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The unique name of the mail blueprint",
+            "example": "WelcomeEmail"
+          },
+          "bodyContent": {
+            "type": "string",
+            "description": "The content/body of the email",
+            "example": "Hello, welcome to our platform!"
+          },
+          "subjectContent": {
+            "type": "string",
+            "description": "The subject line of the email",
+            "example": "Welcome to Our Platform"
+          },
+          "placeholders": {
+            "description": "List of placeholder keys that can be replaced in the content",
+            "example": [
+              "username",
+              "date"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "bodyContent",
+          "subjectContent",
+          "placeholders"
+        ]
+      },
+      "MailBlueprintPaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailBlueprint"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ]
+      },
+      "CreateMailBlueprintDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Blueprint name"
+          },
+          "bodyContent": {
+            "type": "string",
+            "example": "Shirsho {{placeholder}}"
+          },
+          "subjectContent": {
+            "type": "string",
+            "example": "Shirsho {{placeholder}}"
+          }
+        },
+        "required": [
+          "name",
+          "bodyContent",
+          "subjectContent"
+        ]
+      },
+      "UpdateMailBlueprintDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Blueprint name"
+          },
+          "bodyContent": {
+            "type": "string",
+            "example": "Shirsho {{placeholder}}"
+          },
+          "subjectContent": {
+            "type": "string",
+            "example": "Shirsho {{placeholder}}"
+          }
+        }
+      },
+      "MailAutomation": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the mail automation",
+            "example": "WelcomeEmail"
+          },
+          "resourceName": {
+            "type": "string",
+            "description": "The resource name of the mail automation",
+            "example": "exam"
+          },
+          "bluePrintId": {
+            "type": "string",
+            "description": "The blueprint id of the mail automation",
+            "example": "mongo id"
+          }
+        },
+        "required": [
+          "resourceName",
+          "bluePrintId"
+        ]
+      },
+      "MailAutomationPaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailAutomation"
+            }
+          },
+          "count": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ]
+      },
+      "CreateMailAutomationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho",
+            "description": "Name of the mail automation optional"
+          },
+          "resourceName": {
+            "type": "string",
+            "example": "example"
+          },
+          "bluePrintId": {
+            "type": "string",
+            "example": "mongo id"
+          }
+        },
+        "required": [
+          "resourceName",
+          "bluePrintId"
+        ]
+      },
+      "UpdateMailAutomationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shirsho",
+            "description": "Name of the mail automation optional"
+          },
+          "resourceName": {
+            "type": "string",
+            "example": "example"
+          },
+          "bluePrintId": {
+            "type": "string",
+            "example": "mongo id"
+          }
+        }
+      },
+      "CreateMailBlueprintAutomationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Blueprint name"
+          },
+          "resourceName": {
+            "type": "string",
+            "example": "course"
+          },
+          "bodyContent": {
+            "type": "string",
+            "example": "Shirsho {{placeholder}}"
+          },
+          "subjectContent": {
+            "type": "string",
+            "example": "Shirsho {{placeholder}}"
+          }
+        },
+        "required": [
+          "name",
+          "resourceName",
+          "bodyContent",
+          "subjectContent"
+        ]
+      },
+      "SendMailBlueprintDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "mongo id"
+          },
+          "to": {
+            "type": "string",
+            "example": "hniqbal01@gmail.com"
+          },
+          "cc": {
+            "example": [
+              "hniqbal01@gmail.com",
+              "hniqbal01@gmail.com"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bcc": {
+            "example": [
+              "hniqbal01@gmail.com",
+              "hniqbal01@gmail.com"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "placeData": {
+            "type": "object",
+            "description": "JSON object with placeholders and their values. can be a nested json",
+            "example": {
+              "adifferent_placeholder": "Shirsho",
+              "placeholderwithspace": "<h1>ExampleCorp</h1>"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "to",
+          "placeData"
+        ]
+      }
+    }
+  }
+}

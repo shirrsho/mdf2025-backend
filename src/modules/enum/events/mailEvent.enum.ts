@@ -1,0 +1,16 @@
+export enum MailEventNames {
+  SCHEDULE = 'email.schedule',
+  DRAFT = 'email.draft',
+  DRAFT_SEND = 'email.draftsend',
+  SEND = 'email.send',
+  SEND_ALL = 'email.send.all',
+  SEND_ALL_WITH_ATTACHMENT = 'email.send.all.with.attachment',
+  SEND_ALL_WITH_ATTACHMENT_AND_SCHEDULE = 'email.send.all.with.attachment.and.schedule',
+  SEND_ALL_WITH_SCHEDULE = 'email.send.all.with.schedule',
+  SEND_WITH_ATTACHMENT = 'email.send.with.attachment',
+  SEND_WITH_ATTACHMENT_AND_SCHEDULE = 'email.send.with.attachment.and.schedule',
+  SEND_WITH_SCHEDULE = 'email.send.with.schedule',
+  TEMPLATE_CREATE = 'email.template.create',
+  TEMPLATE_DELETE = 'email.template.delete',
+  TEMPLATE_UPDATE = 'email.template.update',
+}
