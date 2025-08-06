@@ -36,7 +36,7 @@ export class MailHistoryGeneralController {
     name: 'redirect',
     description: 'Encoded redirect URL',
     required: true,
-    example: 'https://lms.marketron.com/signin',
+    example: 'https://mdf.marketron.com/signin',
   })
   async updateOpenedAndRedirect(
     @Param('id') id: string,
@@ -48,10 +48,10 @@ export class MailHistoryGeneralController {
 
       const decodedUrl = decodeURIComponent(redirectUrl);
 
-      return res.redirect(302, decodedUrl ?? 'https://demo.customlms.xyz');
+      return res.redirect(302, decodedUrl ?? 'https://mdf.marketron.com');
     } catch (error) {
       this.mailhistoryService.logControllerError(error);
-      return res.redirect(302, 'https://demo.customlms.xyz');
+      return res.redirect(302, 'https://mdf.marketron.com');
     }
   }
 

@@ -166,13 +166,22 @@ export class UserGeneralService {
   async addUser(createUserDto: CreateUserDto): Promise<UserDocument> {
     const password = generator.generate({ length: 12 });
     createUserDto.password = await bcrypt.hash(password, 10);
-    if (!createUserDto.role || createUserDto.role.length === 0) {
+    // if (!createUserDto.role || createUserDto.role.length === 0) {
+    //   createUserDto.role = [Role.USER];
+    // } else if (!createUserDto.role.includes(Role.USER)) {
+    //   createUserDto.role.push(Role.USER);
+    // }
+    if (createUserDto.rolePermission === Role.COMPANY) {
+      createUserDto.role = [Role.COMPANY];
+    } else if (createUserDto.rolePermission === Role.ADMIN) {
+      createUserDto.role = [Role.ADMIN];
+    } else {
       createUserDto.role = [Role.USER];
-    } else if (!createUserDto.role.includes(Role.USER)) {
-      createUserDto.role.push(Role.USER);
     }
-
-    const user = await this.registerUser(createUserDto);
+    const user = await this.registerUser({
+      ...createUserDto,
+      isverified: true,
+    });
 
     this.eventEmitter.emit(
       MailEventNames.SEND,
