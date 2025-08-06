@@ -35,7 +35,7 @@ export class ImagesGeneralController {
   @Post('v2/upload')
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard, RoleGuard)
-  @HasRoles(Role.ADMIN, Role.USER, Role.MODERATOR)
+  @HasRoles(Role.ADMIN, Role.USER, Role.COMPANY)
   @ApiOperation({ summary: 'Upload any file' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -61,7 +61,7 @@ export class ImagesGeneralController {
   @Get('otp/:id')
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard, RoleGuard)
-  @HasRoles(Role.ADMIN, Role.USER, Role.MODERATOR)
+  @HasRoles(Role.ADMIN, Role.USER, Role.COMPANY)
   @ApiParam({ name: 'id', description: 'vedio ID' })
   @ApiOperation({ summary: 'Get otp' })
   async getOtp(@Param('id') id: string) {
@@ -71,7 +71,7 @@ export class ImagesGeneralController {
   @Get()
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard, RoleGuard)
-  @HasRoles(Role.ADMIN, Role.USER, Role.MODERATOR)
+  @HasRoles(Role.ADMIN, Role.USER, Role.COMPANY)
   @ApiOperation({ summary: 'Get all images' })
   @ApiQuery({ type: DynamicDto })
   async findAll(@Query() queryParams: DynamicDto) {
