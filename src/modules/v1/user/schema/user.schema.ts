@@ -1,7 +1,7 @@
 import { AccountStatus, Role, Providers } from '@/modules/enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Exclude } from 'class-transformer';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Interaction } from './interaction.schema';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -31,11 +31,22 @@ export class User {
   password: string;
 
   @ApiProperty({
-    description: 'User phone',
-    example: '1234567890',
+    description: 'Contact number for participants',
+    example: '+8801234567890',
   })
   @Prop({ required: false })
-  phone?: string;
+  contactNumber?: string;
+
+  @ApiProperty({
+    description: 'Company reference for company users',
+    example: '507f1f77bcf86cd799439011',
+  })
+  @Prop({ 
+    required: false, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Company' 
+  })
+  companyId?: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
     description: 'User image url',

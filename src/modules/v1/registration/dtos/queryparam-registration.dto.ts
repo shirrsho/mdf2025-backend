@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 
 export class QueryRegistrationDto {
   @ApiPropertyOptional({
-    description: 'Search by registration name (partial match)',
+    description: 'Search by participant ID',
   })
   @IsOptional()
   @IsString()
-  registrationName?: string;
+  participantId?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()

@@ -26,12 +26,12 @@ export class PaymentCrudService extends BaseService<PaymentCrudService> {
   }
 
   buildPaymentWhereClause(query: QueryPaymentDto): Record<string, any> {
-    const { paymentName, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { transactionId, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const stringFilters = { paymentName };
+    const stringFilters = { transactionId };
     Object.entries(stringFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = { $regex: value, $options: 'i' };
@@ -84,10 +84,10 @@ export class PaymentCrudService extends BaseService<PaymentCrudService> {
   async options(): Promise<OptionDto[]> {
     const payments = await this.paymentModel
       .find()
-      .select('paymentName')
+      .select('transactionId amount status')
       .exec();
     return payments.map((payment) => ({
-      label: payment.paymentName,
+      label: `${payment.transactionId} - ${payment.amount} (${payment.status})`,
       value: payment._id,
     }));
   }

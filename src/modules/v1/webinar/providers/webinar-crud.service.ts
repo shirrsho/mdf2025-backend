@@ -26,12 +26,12 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   }
 
   buildWebinarWhereClause(query: QueryWebinarDto): Record<string, any> {
-    const { webinarName, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { title, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const stringFilters = { webinarName };
+    const stringFilters = { title };
     Object.entries(stringFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = { $regex: value, $options: 'i' };
@@ -84,10 +84,10 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   async options(): Promise<OptionDto[]> {
     const webinars = await this.webinarModel
       .find()
-      .select('webinarName')
+      .select('title')
       .exec();
     return webinars.map((webinar) => ({
-      label: webinar.webinarName,
+      label: webinar.title,
       value: webinar._id,
     }));
   }

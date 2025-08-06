@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 
 export class QueryWebinarDto {
   @ApiPropertyOptional({
-    description: 'Search by webinar name (partial match)',
+    description: 'Search by webinar title (partial match)',
   })
   @IsOptional()
   @IsString()
-  webinarName?: string;
+  title?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()

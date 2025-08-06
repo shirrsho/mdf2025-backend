@@ -8,7 +8,7 @@ export class QueryCompanyDto {
   })
   @IsOptional()
   @IsString()
-  companyName?: string;
+  name?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()

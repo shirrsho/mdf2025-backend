@@ -1,27 +1,69 @@
-import { slugify } from '@/modules/utils/slugify';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { ApplicationStatus } from '@/modules/enum';
 
 @Schema({
   timestamps: true,
 })
 export class Application {
   @ApiProperty({
-    example: 'Application name',
-    description: 'Application name',
+    example: '507f1f77bcf86cd799439011',
+    description: 'Participant ID reference',
     required: true,
   })
-  @Prop({ required: true })
-  applicationName: string;
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'User' 
+  })
+  participantId: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
-    example: 'Application slug',
-    description: 'Application slug',
-    required: false,
+    example: '507f1f77bcf86cd799439012',
+    description: 'Job ID reference',
+    required: true,
   })
-  @Prop({ required: false })
-  slug: string;
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Job' 
+  })
+  jobId: MongooseSchema.Types.ObjectId;
+
+  @ApiProperty({
+    example: '507f1f77bcf86cd799439013',
+    description: 'Company ID reference (denormalized)',
+    required: true,
+  })
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Company' 
+  })
+  companyId: MongooseSchema.Types.ObjectId;
+
+  @ApiProperty({
+    example: '2025-08-06T10:00:00Z',
+    description: 'Application date',
+    required: true,
+  })
+  @Prop({ required: true, default: Date.now })
+  applicationDate: Date;
+
+  @ApiProperty({
+    example: 'pending',
+    description: 'Application status',
+    required: true,
+    enum: ApplicationStatus,
+  })
+  @Prop({ 
+    required: true, 
+    type: String, 
+    enum: ApplicationStatus, 
+    default: ApplicationStatus.PENDING 
+  })
+  status: ApplicationStatus;
 }
 
 export type ApplicationDocument = HydratedDocument<Application>;
@@ -39,19 +81,4 @@ ApplicationSchema.set('toJSON', {
     delete ret.updatedAt;
     return ret;
   },
-});
-
-ApplicationSchema.pre('save', function (next) {
-  if (this.isModified('title') || this.isNew) {
-    this.slug = slugify(this.applicationName);
-  }
-  next();
-});
-
-ApplicationSchema.pre('findOneAndUpdate', function (next) {
-  const update = this.getUpdate() as any;
-  if (update?.applicationName) {
-    update.slug = slugify(update?.applicationName);
-  }
-  next();
 });

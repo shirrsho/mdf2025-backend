@@ -26,17 +26,14 @@ export class RegistrationCrudService extends BaseService<RegistrationCrudService
   }
 
   buildRegistrationWhereClause(query: QueryRegistrationDto): Record<string, any> {
-    const { registrationName, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { participantId, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const stringFilters = { registrationName };
-    Object.entries(stringFilters).forEach(([key, value]) => {
-      if (value) {
-        whereClause[key] = { $regex: value, $options: 'i' };
-      }
-    });
+    if (participantId) {
+      whereClause.participantId = participantId;
+    }
 
     const numberRangeFields = [
       { field: 'total', min: minTotal, max: maxTotal },
@@ -84,10 +81,11 @@ export class RegistrationCrudService extends BaseService<RegistrationCrudService
   async options(): Promise<OptionDto[]> {
     const registrations = await this.registrationModel
       .find()
-      .select('registrationName')
+      .select('participantId webinarId registrationDate')
+      .populate('participantId', 'name')
       .exec();
     return registrations.map((registration) => ({
-      label: registration.registrationName,
+      label: `Registration by ${(registration.participantId as any)?.name || 'Unknown'} - ${registration.registrationDate.toDateString()}`,
       value: registration._id,
     }));
   }

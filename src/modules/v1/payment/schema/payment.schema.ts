@@ -1,27 +1,68 @@
-import { slugify } from '@/modules/utils/slugify';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { PaymentStatus } from '@/modules/enum';
 
 @Schema({
   timestamps: true,
 })
 export class Payment {
   @ApiProperty({
-    example: 'Payment name',
-    description: 'Payment name',
+    example: '507f1f77bcf86cd799439011',
+    description: 'Participant ID reference',
+    required: true,
+  })
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'User' 
+  })
+  participantId: MongooseSchema.Types.ObjectId;
+
+  @ApiProperty({
+    example: 500,
+    description: 'Payment amount',
     required: true,
   })
   @Prop({ required: true })
-  paymentName: string;
+  amount: number;
 
   @ApiProperty({
-    example: 'Payment slug',
-    description: 'Payment slug',
-    required: false,
+    example: 'BDT',
+    description: 'Payment currency',
+    required: true,
   })
-  @Prop({ required: false })
-  slug: string;
+  @Prop({ required: true, default: 'BDT' })
+  currency: string;
+
+  @ApiProperty({
+    example: '2025-08-06T10:00:00Z',
+    description: 'Payment date',
+    required: true,
+  })
+  @Prop({ required: true, default: Date.now })
+  paymentDate: Date;
+
+  @ApiProperty({
+    example: 'completed',
+    description: 'Payment status',
+    required: true,
+    enum: PaymentStatus,
+  })
+  @Prop({ 
+    required: true, 
+    type: String, 
+    enum: PaymentStatus 
+  })
+  status: PaymentStatus;
+
+  @ApiProperty({
+    example: 'TXN123456789',
+    description: 'Unique transaction ID from payment gateway',
+    required: true,
+  })
+  @Prop({ required: true, unique: true })
+  transactionId: string;
 }
 
 export type PaymentDocument = HydratedDocument<Payment>;
@@ -39,19 +80,4 @@ PaymentSchema.set('toJSON', {
     delete ret.updatedAt;
     return ret;
   },
-});
-
-PaymentSchema.pre('save', function (next) {
-  if (this.isModified('title') || this.isNew) {
-    this.slug = slugify(this.paymentName);
-  }
-  next();
-});
-
-PaymentSchema.pre('findOneAndUpdate', function (next) {
-  const update = this.getUpdate() as any;
-  if (update?.paymentName) {
-    update.slug = slugify(update?.paymentName);
-  }
-  next();
 });

@@ -10,3 +10,10 @@ export * from './placeholderResource.enum';
 
 export * from './mail';
 export * from './events';
+
+// Module-specific enums
+export * from './company';
+export * from './job';
+export * from './webinar';
+export * from './application';
+export * from './payment';

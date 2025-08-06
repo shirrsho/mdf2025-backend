@@ -1,27 +1,101 @@
-import { slugify } from '@/modules/utils/slugify';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { WebinarStatus } from '@/modules/enum';
 
 @Schema({
   timestamps: true,
 })
 export class Webinar {
   @ApiProperty({
-    example: 'Webinar name',
-    description: 'Webinar name',
+    example: 'Career Development in Tech Industry',
+    description: 'Webinar title',
     required: true,
   })
   @Prop({ required: true })
-  webinarName: string;
+  title: string;
 
   @ApiProperty({
-    example: 'Webinar slug',
-    description: 'Webinar slug',
+    example: 'Join us for an insightful discussion on career development...',
+    description: 'Webinar description',
+    required: true,
+  })
+  @Prop({ required: true })
+  description: string;
+
+  @ApiProperty({
+    example: '507f1f77bcf86cd799439011',
+    description: 'Host company ID reference',
+    required: true,
+  })
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Company' 
+  })
+  hostId: MongooseSchema.Types.ObjectId;
+
+  @ApiProperty({
+    example: '2025-08-15T14:00:00Z',
+    description: 'Webinar scheduled date and time',
+    required: true,
+  })
+  @Prop({ required: true })
+  scheduledDate: Date;
+
+  @ApiProperty({
+    example: 90,
+    description: 'Duration in minutes',
+    required: true,
+  })
+  @Prop({ required: true })
+  duration: number;
+
+  @ApiProperty({
+    example: 100,
+    description: 'Maximum number of participants',
     required: false,
   })
   @Prop({ required: false })
-  slug: string;
+  maxParticipants?: number;
+
+  @ApiProperty({
+    example: 'https://zoom.us/j/123456789',
+    description: 'Meeting link for the webinar',
+    required: false,
+  })
+  @Prop({ required: false })
+  meetingLink?: string;
+
+  @ApiProperty({
+    example: 'Technology',
+    description: 'Webinar category/topic',
+    required: false,
+  })
+  @Prop({ required: false })
+  category?: string;
+
+  @ApiProperty({
+    example: 'scheduled',
+    description: 'Webinar status',
+    required: true,
+    enum: WebinarStatus,
+  })
+  @Prop({ 
+    required: true, 
+    type: String, 
+    enum: WebinarStatus,
+    default: WebinarStatus.SCHEDULED 
+  })
+  status: WebinarStatus;
+
+  @ApiProperty({
+    example: 'https://company.com/webinar-banner.jpg',
+    description: 'Webinar banner image URL',
+    required: false,
+  })
+  @Prop({ required: false })
+  bannerUrl?: string;
 }
 
 export type WebinarDocument = HydratedDocument<Webinar>;
@@ -39,19 +113,4 @@ WebinarSchema.set('toJSON', {
     delete ret.updatedAt;
     return ret;
   },
-});
-
-WebinarSchema.pre('save', function (next) {
-  if (this.isModified('title') || this.isNew) {
-    this.slug = slugify(this.webinarName);
-  }
-  next();
-});
-
-WebinarSchema.pre('findOneAndUpdate', function (next) {
-  const update = this.getUpdate() as any;
-  if (update?.webinarName) {
-    update.slug = slugify(update?.webinarName);
-  }
-  next();
 });

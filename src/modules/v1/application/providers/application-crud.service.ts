@@ -26,12 +26,12 @@ export class ApplicationCrudService extends BaseService<ApplicationCrudService> 
   }
 
   buildApplicationWhereClause(query: QueryApplicationDto): Record<string, any> {
-    const { applicationName, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { status, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const stringFilters = { applicationName };
+    const stringFilters = { status };
     Object.entries(stringFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = { $regex: value, $options: 'i' };
@@ -84,10 +84,11 @@ export class ApplicationCrudService extends BaseService<ApplicationCrudService> 
   async options(): Promise<OptionDto[]> {
     const applications = await this.applicationModel
       .find()
-      .select('applicationName')
+      .select('status participantId')
+      .populate('participantId', 'name')
       .exec();
     return applications.map((application) => ({
-      label: application.applicationName,
+      label: `Application by ${(application.participantId as any)?.name || 'Unknown'} - ${application.status}`,
       value: application._id,
     }));
   }

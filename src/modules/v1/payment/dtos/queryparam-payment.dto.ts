@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 
 export class QueryPaymentDto {
   @ApiPropertyOptional({
-    description: 'Search by payment name (partial match)',
+    description: 'Search by transaction ID (partial match)',
   })
   @IsOptional()
   @IsString()
-  paymentName?: string;
+  transactionId?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()

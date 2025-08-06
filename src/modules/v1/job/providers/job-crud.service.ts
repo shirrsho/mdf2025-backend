@@ -26,12 +26,12 @@ export class JobCrudService extends BaseService<JobCrudService> {
   }
 
   buildJobWhereClause(query: QueryJobDto): Record<string, any> {
-    const { jobName, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { title, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const stringFilters = { jobName };
+    const stringFilters = { title };
     Object.entries(stringFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = { $regex: value, $options: 'i' };
@@ -84,10 +84,10 @@ export class JobCrudService extends BaseService<JobCrudService> {
   async options(): Promise<OptionDto[]> {
     const jobs = await this.jobModel
       .find()
-      .select('jobName')
+      .select('title')
       .exec();
     return jobs.map((job) => ({
-      label: job.jobName,
+      label: job.title,
       value: job._id,
     }));
   }

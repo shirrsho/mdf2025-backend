@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 
 export class QueryApplicationDto {
   @ApiPropertyOptional({
-    description: 'Search by application name (partial match)',
+    description: 'Search by application status (partial match)',
   })
   @IsOptional()
   @IsString()
-  applicationName?: string;
+  status?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()

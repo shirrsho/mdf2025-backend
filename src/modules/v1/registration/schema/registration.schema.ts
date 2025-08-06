@@ -1,27 +1,42 @@
-import { slugify } from '@/modules/utils/slugify';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({
   timestamps: true,
 })
 export class Registration {
   @ApiProperty({
-    example: 'Registration name',
-    description: 'Registration name',
+    example: '507f1f77bcf86cd799439011',
+    description: 'Participant ID reference',
     required: true,
   })
-  @Prop({ required: true })
-  registrationName: string;
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'User' 
+  })
+  participantId: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
-    example: 'Registration slug',
-    description: 'Registration slug',
-    required: false,
+    example: '507f1f77bcf86cd799439012',
+    description: 'Webinar ID reference',
+    required: true,
   })
-  @Prop({ required: false })
-  slug: string;
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Webinar' 
+  })
+  webinarId: MongooseSchema.Types.ObjectId;
+
+  @ApiProperty({
+    example: '2025-08-06T10:00:00Z',
+    description: 'Registration date',
+    required: true,
+  })
+  @Prop({ required: true, default: Date.now })
+  registrationDate: Date;
 }
 
 export type RegistrationDocument = HydratedDocument<Registration>;
@@ -39,19 +54,4 @@ RegistrationSchema.set('toJSON', {
     delete ret.updatedAt;
     return ret;
   },
-});
-
-RegistrationSchema.pre('save', function (next) {
-  if (this.isModified('title') || this.isNew) {
-    this.slug = slugify(this.registrationName);
-  }
-  next();
-});
-
-RegistrationSchema.pre('findOneAndUpdate', function (next) {
-  const update = this.getUpdate() as any;
-  if (update?.registrationName) {
-    update.slug = slugify(update?.registrationName);
-  }
-  next();
 });

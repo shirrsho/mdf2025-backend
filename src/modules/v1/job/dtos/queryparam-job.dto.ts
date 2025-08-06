@@ -4,11 +4,11 @@ import { Type } from 'class-transformer';
 
 export class QueryJobDto {
   @ApiPropertyOptional({
-    description: 'Search by job name (partial match)',
+    description: 'Search by job title (partial match)',
   })
   @IsOptional()
   @IsString()
-  jobName?: string;
+  title?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()

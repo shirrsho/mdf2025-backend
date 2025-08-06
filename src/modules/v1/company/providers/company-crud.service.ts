@@ -26,12 +26,12 @@ export class CompanyCrudService extends BaseService<CompanyCrudService> {
   }
 
   buildCompanyWhereClause(query: QueryCompanyDto): Record<string, any> {
-    const { companyName, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { name, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const stringFilters = { companyName };
+    const stringFilters = { name };
     Object.entries(stringFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = { $regex: value, $options: 'i' };
@@ -82,12 +82,12 @@ export class CompanyCrudService extends BaseService<CompanyCrudService> {
   }
 
   async options(): Promise<OptionDto[]> {
-    const companys = await this.companyModel
+    const companies = await this.companyModel
       .find()
-      .select('companyName')
+      .select('name')
       .exec();
-    return companys.map((company) => ({
-      label: company.companyName,
+    return companies.map((company) => ({
+      label: company.name,
       value: company._id,
     }));
   }
