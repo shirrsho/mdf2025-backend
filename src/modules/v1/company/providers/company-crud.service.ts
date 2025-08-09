@@ -9,25 +9,24 @@ import { Model } from 'mongoose';
 import { PaginationResponse } from '@/modules/utils';
 import { BaseService } from '@/modules/base';
 import { Company, CompanyDocument } from '../schema';
-import {
-  CreateCompanyDto,
-  UpdateCompanyDto,
-  QueryCompanyDto,
-} from '../dtos';
+import { CreateCompanyDto, UpdateCompanyDto, QueryCompanyDto } from '../dtos';
 import { OptionDto } from '@/modules/dto';
+import { UserCurdService } from '../../user';
+import { UserDocument } from '../../user/schema';
+import { Role } from '@/modules/enum';
 
 @Injectable()
 export class CompanyCrudService extends BaseService<CompanyCrudService> {
   constructor(
     @InjectModel(Company.name)
     private readonly companyModel: Model<CompanyDocument>,
+    private readonly userCrudService: UserCurdService,
   ) {
     super(CompanyCrudService.name);
   }
 
   buildCompanyWhereClause(query: QueryCompanyDto): Record<string, any> {
-    const { name, minTotal, maxTotal, createdAfter, createdBefore } =
-      query;
+    const { name, minTotal, maxTotal, createdAfter, createdBefore } = query;
 
     const whereClause: Record<string, any> = {};
 
@@ -82,10 +81,7 @@ export class CompanyCrudService extends BaseService<CompanyCrudService> {
   }
 
   async options(): Promise<OptionDto[]> {
-    const companies = await this.companyModel
-      .find()
-      .select('name')
-      .exec();
+    const companies = await this.companyModel.find().select('name').exec();
     return companies.map((company) => ({
       label: company.name,
       value: company._id,
@@ -94,9 +90,22 @@ export class CompanyCrudService extends BaseService<CompanyCrudService> {
 
   async create(
     createCompanyDto: CreateCompanyDto,
+    user: UserDocument,
   ): Promise<CompanyDocument> {
+    console.log(createCompanyDto);
+    
+    const userData = await this.userCrudService.findById(user.id);
+    if (!userData) {
+      throw new NotFoundException('User not found');
+    }
     try {
       const company = await this.companyModel.create(createCompanyDto);
+      if (userData?.rolePermission != Role.ADMIN) {
+        await this.userCrudService.update(userData.id, {
+          companyId: company.id,
+        });
+      }
+
       return company.save();
     } catch (error) {
       if (error?.code === 11000) {
@@ -211,9 +220,7 @@ export class CompanyCrudService extends BaseService<CompanyCrudService> {
   }
 
   async delete(id: string): Promise<CompanyDocument> {
-    const deletedCompany = await this.companyModel
-      .findByIdAndDelete(id)
-      .exec();
+    const deletedCompany = await this.companyModel.findByIdAndDelete(id).exec();
     if (!deletedCompany) {
       throw new NotFoundException('Company not found');
     }

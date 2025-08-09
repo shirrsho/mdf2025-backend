@@ -24,7 +24,9 @@ import {
   ApiCustomBadRequestResponse,
   ApiCustomForbiddenResponse,
   ApiCustomNotFoundResponse,
+  HasRoles,
   MongoIdParam,
+  ReqUser,
 } from '@/modules/decorator';
 import { BaseController } from '@/modules/base';
 import { CompanyCrudService } from '../providers';
@@ -36,6 +38,8 @@ import {
   QueryCompanyDto,
 } from '../dtos';
 import { OptionDto } from '@/modules/dto';
+import { Role } from '@/modules/enum';
+import { UserDocument } from '../../user/schema';
 
 @ApiTags('v1/company')
 @Controller({ path: 'company', version: '1' })
@@ -161,6 +165,8 @@ export class CompanyCrudController extends BaseController {
   }
 
   @Post()
+  @UseGuards(AccessTokenGuard)
+  @HasRoles(Role.ADMIN, Role.COMPANY)
   @ApiOperation({
     summary: 'Create a new company',
     description: 'Create a new company if mandatory fields are present',
@@ -174,8 +180,9 @@ export class CompanyCrudController extends BaseController {
   @ApiBody({ type: CreateCompanyDto })
   async create(
     @Body() createCompanyDto: CreateCompanyDto,
+    @ReqUser() user: UserDocument
   ): Promise<Company> {
-    return await this.companyService.create(createCompanyDto);
+    return await this.companyService.create(createCompanyDto, user);
   }
 
   @Patch(':id')
