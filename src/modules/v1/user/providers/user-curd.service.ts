@@ -141,4 +141,26 @@ export class UserCurdService {
     }
     return deletedUser;
   }
+
+  async findByCompanyId(
+    companyId: string,
+    queryParams: DynamicDto,
+  ): Promise<PaginationResponse<UserDocument>> {
+    const {
+      select = {},
+      page = 1,
+      limit = 10,
+    } = queryParams?.query || {};
+    const skip = ((page > 1 ? page : 1) - 1) * (limit > 0 ? limit : 1);
+    const users = await this.userModel
+      .find({ companyId })
+      .select(select)
+      .select({ password: false, otp: false })
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: -1 })
+      .exec();
+    const count = await this.userModel.countDocuments({ companyId }).exec();
+    return { data: users, count };
+  }
 }

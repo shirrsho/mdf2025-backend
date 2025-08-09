@@ -104,4 +104,11 @@ export class CreateUserDto {
   readonly rolePermission?: string;
 
   isverified?: boolean;
+
+  @ApiProperty({
+      required: false,
+    example: 'companyid',
+    })
+    @IsOptional()
+    companyId?: string;
 }

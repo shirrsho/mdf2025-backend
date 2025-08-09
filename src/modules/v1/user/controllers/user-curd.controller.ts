@@ -252,4 +252,34 @@ export class UserCurdController extends BaseController {
     }
     return deletedUser;
   }
+
+  @Get('company/:companyId')
+  @UseGuards(AccessTokenGuard, RoleGuard)
+  @HasRoles(Role.ADMIN, Role.USER, Role.COMPANY)
+  @ApiOperation({
+    summary: 'Get users by company ID',
+    description: 'Retrieve all users belonging to a specific company.',
+  })
+  @ApiParam({ name: 'companyId', description: 'Company ID' })
+  @ApiQuery({ type: DynamicDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Users retrieved successfully.',
+    type: UserPaginationResponse,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'No users found for this company.',
+    type: ExceptionResponse,
+  })
+  async findByCompanyId(
+    @Param('companyId') companyId: string,
+    @Query() queryParams: DynamicDto,
+  ): Promise<PaginationResponse<User>> {
+    const users = await this.userService.findByCompanyId(companyId, queryParams);
+    if (!users || users.data.length === 0) {
+      throw new NotFoundException('No users found for this company');
+    }
+    return users;
+  }
 }
