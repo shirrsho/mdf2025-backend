@@ -26,10 +26,17 @@ export class JobCrudService extends BaseService<JobCrudService> {
   }
 
   buildJobWhereClause(query: QueryJobDto): Record<string, any> {
-    const { title, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { title, companyId, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
+
+    const exactFilters = { companyId };
+    Object.entries(exactFilters).forEach(([key, value]) => {
+      if (value) {
+        whereClause[key] = value;
+      }
+    });
 
     const stringFilters = { title };
     Object.entries(stringFilters).forEach(([key, value]) => {

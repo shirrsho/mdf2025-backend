@@ -10,6 +10,13 @@ export class QueryJobDto {
   @IsString()
   title?: string;
 
+  @ApiPropertyOptional({
+    description: 'Search by company id',
+  })
+  @IsOptional()
+  @IsString()
+  companyId?: string;
+
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()
   @Type(() => Number)
