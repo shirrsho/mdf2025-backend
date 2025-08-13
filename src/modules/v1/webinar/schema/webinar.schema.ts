@@ -36,20 +36,38 @@ export class Webinar {
   hostId: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
-    example: '2025-08-15T14:00:00Z',
-    description: 'Webinar scheduled date and time',
+    example: '507f1f77bcf86cd799439012',
+    description: 'Timeslot ID reference',
     required: true,
   })
-  @Prop({ required: true })
-  scheduledDate: Date;
+  @Prop({ 
+    required: true, 
+    type: MongooseSchema.Types.ObjectId, 
+    ref: 'Timeslot' 
+  })
+  timeslotId: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
-    example: 90,
-    description: 'Duration in minutes',
+    example: 60,
+    description: 'Duration of the webinar in minutes',
     required: true,
+    type: Number,
+    minimum: 1,
   })
-  @Prop({ required: true })
+  @Prop({ 
+    required: true, 
+    type: Number,
+    min: 1
+  })
   duration: number;
+
+  @ApiProperty({
+    example: '2025-08-15T14:00:00Z',
+    description: 'Specific start time within the timeslot (optional, defaults to timeslot start time)',
+    required: false,
+  })
+  @Prop({ required: false })
+  scheduledStartTime?: Date;
 
   @ApiProperty({
     example: 100,

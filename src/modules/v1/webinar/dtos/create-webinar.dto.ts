@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEnum, IsDateString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEnum, IsUrl, IsDate, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { WebinarStatus } from '@/modules/enum';
 
 export class CreateWebinarDto {
@@ -32,21 +33,34 @@ export class CreateWebinarDto {
 
   @ApiProperty({
     required: true,
-    example: '2025-08-15T14:00:00Z',
-    description: 'Webinar scheduled date and time',
+    example: '507f1f77bcf86cd799439012',
+    description: 'Timeslot ID reference',
   })
-  @IsNotEmpty({ message: 'Scheduled date cannot be empty' })
-  @IsDateString()
-  readonly scheduledDate: string;
+  @IsNotEmpty({ message: 'Timeslot ID cannot be empty' })
+  @IsString()
+  readonly timeslotId: string;
 
   @ApiProperty({
     required: true,
-    example: 90,
-    description: 'Duration in minutes',
+    example: 60,
+    description: 'Duration of the webinar in minutes',
+    type: Number,
+    minimum: 1,
   })
   @IsNotEmpty({ message: 'Duration cannot be empty' })
-  @IsNumber()
+  @IsNumber({}, { message: 'Duration must be a number' })
+  @Min(1, { message: 'Duration must be at least 1 minute' })
   readonly duration: number;
+
+  @ApiProperty({
+    required: false,
+    example: '2025-08-15T14:00:00Z',
+    description: 'Specific start time within the timeslot (optional, defaults to timeslot start time)',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  readonly scheduledStartTime?: Date;
 
   @ApiProperty({
     required: false,

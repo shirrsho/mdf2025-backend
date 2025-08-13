@@ -17,6 +17,7 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { AccessTokenGuard, RolePermissionGuard } from '@/modules/shared';
 import { PaginationResponse } from '@/modules/utils';
@@ -27,7 +28,7 @@ import {
   MongoIdParam,
 } from '@/modules/decorator';
 import { BaseController } from '@/modules/base';
-import { WebinarCrudService } from '../providers';
+import { WebinarCrudService, WebinarValidationService } from '../providers';
 import { Webinar } from '../schema';
 import {
   CreateWebinarDto,
@@ -36,11 +37,15 @@ import {
   QueryWebinarDto,
 } from '../dtos';
 import { OptionDto } from '@/modules/dto';
+import { WebinarStatus } from '@/modules/enum';
 
 @ApiTags('v1/webinar')
 @Controller({ path: 'webinar', version: '1' })
 export class WebinarCrudController extends BaseController {
-  constructor(private readonly webinarService: WebinarCrudService) {
+  constructor(
+    private readonly webinarService: WebinarCrudService,
+    private readonly webinarValidationService: WebinarValidationService,
+  ) {
     super();
   }
 
@@ -78,6 +83,49 @@ export class WebinarCrudController extends BaseController {
   @ApiCustomBadRequestResponse('Invalid request')
   async options(): Promise<OptionDto[]> {
     return await this.webinarService.options();
+  }
+
+  @Get('available-slots/:timeslotId')
+  @ApiOperation({
+    summary: 'Get available time slots within a timeslot',
+    description: 'Find available time slots within a specific timeslot for a given webinar duration.',
+  })
+  @ApiParam({ 
+    name: 'timeslotId', 
+    description: 'Timeslot ID to check for availability',
+    type: 'string'
+  })
+  @ApiQuery({
+    name: 'duration',
+    description: 'Webinar duration in minutes',
+    type: Number,
+    required: true,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Available time slots retrieved successfully.',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          startTime: { type: 'string', format: 'date-time' },
+          endTime: { type: 'string', format: 'date-time' },
+        },
+      },
+    },
+  })
+  @ApiCustomBadRequestResponse('Invalid timeslot ID or duration')
+  @ApiCustomNotFoundResponse('Timeslot not found')
+  async getAvailableSlots(
+    @MongoIdParam('timeslotId') timeslotId: string,
+    @Query('duration') duration: number,
+  ): Promise<{ startTime: Date; endTime: Date }[]> {
+    const validDuration = this.webinarValidationService.validateWebinarDuration(duration);
+    return await this.webinarValidationService.findAvailableTimeSlots(
+      timeslotId,
+      validDuration,
+    );
   }
 
   @Get('public')

@@ -10,6 +10,7 @@ import { JobModule } from './job';
 import { PaymentModule } from '../shared/payment';
 import { RegistrationModule } from './registration';
 import { WebinarModule } from './webinar';
+import { TimeslotModule } from './timeslot';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { WebinarModule } from './webinar';
     PaymentModule,
     RegistrationModule,
     WebinarModule,
+    TimeslotModule,
   ],
 })
 export class V1Module {}

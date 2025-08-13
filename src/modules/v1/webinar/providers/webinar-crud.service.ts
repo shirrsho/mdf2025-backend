@@ -15,12 +15,14 @@ import {
   QueryWebinarDto,
 } from '../dtos';
 import { OptionDto } from '@/modules/dto';
+import { WebinarValidationService } from './webinar-validation.service';
 
 @Injectable()
 export class WebinarCrudService extends BaseService<WebinarCrudService> {
   constructor(
     @InjectModel(Webinar.name)
     private readonly webinarModel: Model<WebinarDocument>,
+    private readonly webinarValidationService: WebinarValidationService,
   ) {
     super(WebinarCrudService.name);
   }
@@ -96,7 +98,23 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     createWebinarDto: CreateWebinarDto,
   ): Promise<WebinarDocument> {
     try {
-      const webinar = await this.webinarModel.create(createWebinarDto);
+      // Validate duration
+      const validDuration = this.webinarValidationService.validateWebinarDuration(
+        createWebinarDto.duration,
+      );
+
+      // Validate scheduling and overlap
+      const actualStartTime = await this.webinarValidationService.validateWebinarScheduling(
+        createWebinarDto.timeslotId,
+        validDuration,
+        createWebinarDto.scheduledStartTime,
+      );
+
+      const webinar = await this.webinarModel.create({
+        ...createWebinarDto,
+        duration: validDuration,
+        scheduledStartTime: actualStartTime,
+      });
       return webinar.save();
     } catch (error) {
       if (error?.code === 11000) {
@@ -127,6 +145,8 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     const [webinars, count] = await Promise.all([
       this.webinarModel
         .find(whereClause)
+        .populate('timeslotId', 'timeslotName startTime endTime isAvailable')
+        .populate('hostId', 'name')
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
@@ -159,6 +179,8 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     const [webinars, count] = await Promise.all([
       this.webinarModel
         .find(whereClause)
+        .populate('timeslotId', 'timeslotName startTime endTime')
+        .populate('hostId', 'name')
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
@@ -173,7 +195,11 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   }
 
   async findById(id: string): Promise<WebinarDocument> {
-    const webinar = await this.webinarModel.findById(id).exec();
+    const webinar = await this.webinarModel
+      .findById(id)
+      .populate('timeslotId', 'timeslotName startTime endTime isAvailable')
+      .populate('hostId', 'name')
+      .exec();
     if (!webinar) {
       throw new NotFoundException('Webinar not found');
     }
@@ -181,7 +207,11 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   }
 
   async findByIdPublic(id: string): Promise<WebinarDocument> {
-    const webinar = await this.webinarModel.findById(id).exec();
+    const webinar = await this.webinarModel
+      .findById(id)
+      .populate('timeslotId', 'timeslotName startTime endTime')
+      .populate('hostId', 'name')
+      .exec();
     if (!webinar) {
       throw new NotFoundException('Webinar not found');
     }
@@ -193,6 +223,40 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     updateWebinarDto: UpdateWebinarDto,
   ): Promise<WebinarDocument> {
     try {
+      // If duration, timeslotId, or scheduledStartTime is being updated, validate
+      if (updateWebinarDto.duration || updateWebinarDto.timeslotId || updateWebinarDto.scheduledStartTime) {
+        const existingWebinar = await this.findById(id);
+        
+        const newDuration = updateWebinarDto.duration 
+          ? this.webinarValidationService.validateWebinarDuration(updateWebinarDto.duration)
+          : existingWebinar.duration;
+        
+        const newTimeslotId = updateWebinarDto.timeslotId || existingWebinar.timeslotId;
+        const newScheduledStartTime = updateWebinarDto.scheduledStartTime || existingWebinar.scheduledStartTime;
+
+        const actualStartTime = await this.webinarValidationService.validateWebinarScheduling(
+          newTimeslotId.toString(),
+          newDuration,
+          newScheduledStartTime,
+          id, // Exclude current webinar from overlap check
+        );
+
+        // Create a new update object with validated duration and start time
+        const validatedUpdateDto = {
+          ...updateWebinarDto,
+          duration: newDuration,
+          scheduledStartTime: actualStartTime,
+        };
+
+        const updatedWebinar = await this.webinarModel
+          .findByIdAndUpdate(id, validatedUpdateDto, { new: true })
+          .exec();
+        if (!updatedWebinar) {
+          throw new NotFoundException('Webinar not found');
+        }
+        return updatedWebinar;
+      }
+
       const updatedWebinar = await this.webinarModel
         .findByIdAndUpdate(id, updateWebinarDto, { new: true })
         .exec();
