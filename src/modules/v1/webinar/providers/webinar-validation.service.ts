@@ -63,7 +63,7 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
 
     // Check for overlapping webinars within the same timeslot
     await this.validateWebinarTimeOverlap(
-      timeslotId,
+      timeslot?.id,
       webinarStartTime,
       webinarEndTime,
       excludeWebinarId,
@@ -82,7 +82,7 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
     excludeWebinarId?: string,
   ): Promise<void> {
     const existingWebinarsQuery: any = { 
-      timeslotId: timeslotId,
+      timeslot: timeslotId,
       status: { $ne: 'cancelled' } // Exclude cancelled webinars
     };
 
@@ -93,14 +93,14 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
 
     const existingWebinars = await this.webinarModel
       .find(existingWebinarsQuery)
-      .populate('timeslotId')
+      .populate('timeslot')
       .exec();
 
     // Check each existing webinar for overlap
     for (const existingWebinar of existingWebinars) {
       // Get the actual start time of the existing webinar
       const existingStartTime = existingWebinar.scheduledStartTime || 
-        new Date((existingWebinar as any).timeslotId.startTime);
+        new Date((existingWebinar as any).timeslot.startTime);
       const existingEndTime = this.calculateWebinarEndTime(existingStartTime, existingWebinar.duration);
 
       // Check for overlap
@@ -173,10 +173,10 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
 
     const existingWebinars = await this.webinarModel
       .find({ 
-        timeslotId: timeslotId,
+        timeslot: timeslot,
         status: { $ne: 'cancelled' }
       })
-      .populate('timeslotId')
+      .populate('timeslot')
       .exec();
 
     // Create a list of occupied time ranges
@@ -184,7 +184,7 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
     
     for (const webinar of existingWebinars) {
       const startTime = webinar.scheduledStartTime || 
-        new Date((webinar as any).timeslotId.startTime);
+        new Date((webinar as any).timeslot.startTime);
       const endTime = this.calculateWebinarEndTime(startTime, webinar.duration);
       occupiedRanges.push({ start: startTime, end: endTime });
     }

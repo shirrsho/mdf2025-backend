@@ -105,7 +105,7 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
 
       // Validate scheduling and overlap
       const actualStartTime = await this.webinarValidationService.validateWebinarScheduling(
-        createWebinarDto.timeslotId,
+        createWebinarDto.timeslot,
         validDuration,
         createWebinarDto.scheduledStartTime,
       );
@@ -145,8 +145,8 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     const [webinars, count] = await Promise.all([
       this.webinarModel
         .find(whereClause)
-        .populate('timeslotId', 'timeslotName startTime endTime isAvailable')
-        .populate('hostId', 'name')
+        .populate('timeslot', 'timeslotName startTime endTime isAvailable description slug')
+        .populate('host', 'name description industry location website logoUrl size contactEmail contactNumber slug')
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
@@ -179,8 +179,8 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     const [webinars, count] = await Promise.all([
       this.webinarModel
         .find(whereClause)
-        .populate('timeslotId', 'timeslotName startTime endTime')
-        .populate('hostId', 'name')
+        .populate('timeslot', 'timeslotName startTime endTime description slug')
+        .populate('host', 'name description industry location website logoUrl size contactEmail contactNumber slug')
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
@@ -197,8 +197,8 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   async findById(id: string): Promise<WebinarDocument> {
     const webinar = await this.webinarModel
       .findById(id)
-      .populate('timeslotId', 'timeslotName startTime endTime isAvailable')
-      .populate('hostId', 'name')
+      .populate('timeslot', 'timeslotName startTime endTime isAvailable description slug')
+      .populate('host', 'name description industry location website logoUrl size contactEmail contactNumber slug')
       .exec();
     if (!webinar) {
       throw new NotFoundException('Webinar not found');
@@ -209,8 +209,8 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   async findByIdPublic(id: string): Promise<WebinarDocument> {
     const webinar = await this.webinarModel
       .findById(id)
-      .populate('timeslotId', 'timeslotName startTime endTime')
-      .populate('hostId', 'name')
+      .populate('timeslot', 'timeslotName startTime endTime description slug')
+      .populate('host', 'name description industry location website logoUrl size contactEmail contactNumber slug')
       .exec();
     if (!webinar) {
       throw new NotFoundException('Webinar not found');
@@ -223,15 +223,15 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     updateWebinarDto: UpdateWebinarDto,
   ): Promise<WebinarDocument> {
     try {
-      // If duration, timeslotId, or scheduledStartTime is being updated, validate
-      if (updateWebinarDto.duration || updateWebinarDto.timeslotId || updateWebinarDto.scheduledStartTime) {
+      // If duration, timeslot, or scheduledStartTime is being updated, validate
+      if (updateWebinarDto.duration || updateWebinarDto.timeslot || updateWebinarDto.scheduledStartTime) {
         const existingWebinar = await this.findById(id);
         
         const newDuration = updateWebinarDto.duration 
           ? this.webinarValidationService.validateWebinarDuration(updateWebinarDto.duration)
           : existingWebinar.duration;
         
-        const newTimeslotId = updateWebinarDto.timeslotId || existingWebinar.timeslotId;
+        const newTimeslotId = updateWebinarDto.timeslot || existingWebinar.timeslot;
         const newScheduledStartTime = updateWebinarDto.scheduledStartTime || existingWebinar.scheduledStartTime;
 
         const actualStartTime = await this.webinarValidationService.validateWebinarScheduling(

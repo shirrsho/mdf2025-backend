@@ -29,7 +29,7 @@ export class CreateWebinarDto {
   })
   @IsNotEmpty({ message: 'Host ID cannot be empty' })
   @IsString()
-  readonly hostId: string;
+  readonly host: string;
 
   @ApiProperty({
     required: true,
@@ -38,7 +38,7 @@ export class CreateWebinarDto {
   })
   @IsNotEmpty({ message: 'Timeslot ID cannot be empty' })
   @IsString()
-  readonly timeslotId: string;
+  readonly timeslot: string;
 
   @ApiProperty({
     required: true,

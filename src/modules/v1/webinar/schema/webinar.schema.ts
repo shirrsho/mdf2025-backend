@@ -33,7 +33,7 @@ export class Webinar {
     type: MongooseSchema.Types.ObjectId, 
     ref: 'Company' 
   })
-  hostId: MongooseSchema.Types.ObjectId;
+  host: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
     example: '507f1f77bcf86cd799439012',
@@ -45,7 +45,7 @@ export class Webinar {
     type: MongooseSchema.Types.ObjectId, 
     ref: 'Timeslot' 
   })
-  timeslotId: MongooseSchema.Types.ObjectId;
+  timeslot: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
     example: 60,
