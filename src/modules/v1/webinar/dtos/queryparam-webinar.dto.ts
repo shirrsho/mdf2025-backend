@@ -10,6 +10,13 @@ export class QueryWebinarDto {
   @IsString()
   title?: string;
 
+  @ApiPropertyOptional({
+    description: 'Filter by timeslot ID',
+  })
+  @IsOptional()
+  @IsString()
+  timeslot?: string;
+
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()
   @Type(() => Number)

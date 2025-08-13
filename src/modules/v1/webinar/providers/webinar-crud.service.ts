@@ -28,17 +28,23 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   }
 
   buildWebinarWhereClause(query: QueryWebinarDto): Record<string, any> {
-    const { title, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { title, timeslot, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
+    // String filters (regex search)
     const stringFilters = { title };
     Object.entries(stringFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = { $regex: value, $options: 'i' };
       }
     });
+
+    // Exact match filters
+    if (timeslot) {
+      whereClause.timeslot = timeslot;
+    }
 
     const numberRangeFields = [
       { field: 'total', min: minTotal, max: maxTotal },
