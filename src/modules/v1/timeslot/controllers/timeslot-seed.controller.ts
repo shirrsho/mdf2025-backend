@@ -33,42 +33,36 @@ export class TimeslotSeedController extends BaseController {
         startTime: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 9, 0, 0),
         endTime: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 12, 0, 0),
         description: 'Morning session for Day 1 webinars (9:00 AM - 12:00 PM)',
-        isAvailable: true,
       },
       {
         timeslotName: 'Afternoon Session - Day 1',
         startTime: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 14, 0, 0),
         endTime: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 17, 0, 0),
         description: 'Afternoon session for Day 1 webinars (2:00 PM - 5:00 PM)',
-        isAvailable: true,
       },
       {
         timeslotName: 'Evening Session - Day 1',
         startTime: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 18, 0, 0),
         endTime: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 21, 0, 0),
         description: 'Evening session for Day 1 webinars (6:00 PM - 9:00 PM)',
-        isAvailable: true,
       },
       {
         timeslotName: 'Morning Session - Day 2',
         startTime: new Date(dayAfterTomorrow.getFullYear(), dayAfterTomorrow.getMonth(), dayAfterTomorrow.getDate(), 9, 0, 0),
         endTime: new Date(dayAfterTomorrow.getFullYear(), dayAfterTomorrow.getMonth(), dayAfterTomorrow.getDate(), 12, 0, 0),
         description: 'Morning session for Day 2 webinars (9:00 AM - 12:00 PM)',
-        isAvailable: true,
       },
       {
         timeslotName: 'Afternoon Session - Day 2',
         startTime: new Date(dayAfterTomorrow.getFullYear(), dayAfterTomorrow.getMonth(), dayAfterTomorrow.getDate(), 14, 0, 0),
         endTime: new Date(dayAfterTomorrow.getFullYear(), dayAfterTomorrow.getMonth(), dayAfterTomorrow.getDate(), 17, 0, 0),
         description: 'Afternoon session for Day 2 webinars (2:00 PM - 5:00 PM)',
-        isAvailable: true,
       },
       {
         timeslotName: 'Evening Session - Day 2',
         startTime: new Date(dayAfterTomorrow.getFullYear(), dayAfterTomorrow.getMonth(), dayAfterTomorrow.getDate(), 18, 0, 0),
         endTime: new Date(dayAfterTomorrow.getFullYear(), dayAfterTomorrow.getMonth(), dayAfterTomorrow.getDate(), 21, 0, 0),
         description: 'Evening session for Day 2 webinars (6:00 PM - 9:00 PM)',
-        isAvailable: true,
       },
     ];
 

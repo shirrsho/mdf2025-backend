@@ -151,7 +151,7 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     const [webinars, count] = await Promise.all([
       this.webinarModel
         .find(whereClause)
-        .populate('timeslot', 'timeslotName startTime endTime isAvailable description slug')
+        .populate('timeslot', 'timeslotName startTime endTime description slug')
         .populate('host', 'name description industry location website logoUrl size contactEmail contactNumber slug')
         .sort(sortOptions)
         .skip(skip)
@@ -203,7 +203,7 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   async findById(id: string): Promise<WebinarDocument> {
     const webinar = await this.webinarModel
       .findById(id)
-      .populate('timeslot', 'timeslotName startTime endTime isAvailable description slug')
+      .populate('timeslot', 'timeslotName startTime endTime description slug')
       .populate('host', 'name description industry location website logoUrl size contactEmail contactNumber slug')
       .exec();
     if (!webinar) {

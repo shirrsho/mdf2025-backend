@@ -46,17 +46,18 @@ export class TimeslotCrudController extends BaseController {
 
   @Get('available')
   @ApiOperation({
-    summary: 'Get available timeslots',
-    description: 'Retrieve all timeslots that are available for booking.',
+    summary: 'Get all timeslots',
+    description: 'Retrieve all timeslots.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Available timeslots retrieved successfully.',
+    description: 'Timeslots retrieved successfully.',
     type: [Timeslot],
   })
   @ApiCustomBadRequestResponse('Invalid request')
   async getAvailableTimeslots(): Promise<Timeslot[]> {
-    return await this.timeslotService.getAvailableTimeslots();
+    const result = await this.timeslotService.findAllPublic({});
+    return result.data;
   }
 
   @Get('count')

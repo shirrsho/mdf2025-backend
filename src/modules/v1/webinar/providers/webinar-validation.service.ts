@@ -35,10 +35,6 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
       throw new BadRequestException('Invalid timeslot ID');
     }
 
-    if (!timeslot.isAvailable) {
-      throw new ConflictException('Timeslot is not available for booking');
-    }
-
     // Check if the timeslot duration can accommodate the webinar duration
     const timeslotDurationMs = 
       new Date(timeslot.endTime).getTime() - new Date(timeslot.startTime).getTime();
@@ -167,7 +163,7 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
     duration: number,
   ): Promise<{ startTime: Date; endTime: Date }[]> {
     const timeslot = await this.timeslotService.findById(timeslotId);
-    if (!timeslot || !timeslot.isAvailable) {
+    if (!timeslot) {
       return [];
     }
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsDate, IsOptional, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsString, IsDate, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateTimeslotDto {
@@ -40,14 +40,4 @@ export class CreateTimeslotDto {
   @IsOptional()
   @IsString()
   readonly description?: string;
-
-  @ApiProperty({
-    required: false,
-    example: true,
-    description: 'Whether this timeslot is available for booking',
-    default: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  readonly isAvailable?: boolean;
 }

@@ -46,15 +46,6 @@ export class Timeslot {
   })
   @Prop({ required: false })
   description?: string;
-
-  @ApiProperty({
-    example: true,
-    description: 'Whether this timeslot is available for booking',
-    required: false,
-    default: true,
-  })
-  @Prop({ required: false, default: true })
-  isAvailable: boolean;
 }
 
 export type TimeslotDocument = HydratedDocument<Timeslot>;
