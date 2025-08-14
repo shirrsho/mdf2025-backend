@@ -94,7 +94,7 @@ export class Webinar {
   category?: string;
 
   @ApiProperty({
-    example: 'scheduled',
+    example: 'active',
     description: 'Webinar status',
     required: true,
     enum: WebinarStatus,
@@ -103,7 +103,7 @@ export class Webinar {
     required: true, 
     type: String, 
     enum: WebinarStatus,
-    default: WebinarStatus.SCHEDULED 
+    default: WebinarStatus.ACTIVE 
   })
   status: WebinarStatus;
 

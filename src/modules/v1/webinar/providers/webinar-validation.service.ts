@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -10,7 +11,7 @@ import { Webinar, WebinarDocument } from '../schema';
 import { TimeslotCrudService } from '../../timeslot/providers';
 
 @Injectable()
-export class WebinarValidationService extends BaseService<WebinarValidationService> {
+export class WebinarValidationService extends BaseService<WebinarDocument> {
   constructor(
     @InjectModel(Webinar.name)
     private readonly webinarModel: Model<WebinarDocument>,
@@ -79,7 +80,7 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
   ): Promise<void> {
     const existingWebinarsQuery: any = { 
       timeslot: timeslotId,
-      status: { $ne: 'cancelled' } // Exclude cancelled webinars
+      status: { $ne: 'cancelled' } // Exclude cancelled webinars - they free up their timeslots
     };
 
     // If we're updating a webinar, exclude it from the check
@@ -87,10 +88,24 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
       existingWebinarsQuery._id = { $ne: excludeWebinarId };
     }
 
+    // First, check if there are any cancelled webinars that would be freed up
+    const cancelledWebinars = await this.webinarModel
+      .find({ 
+        timeslot: timeslotId,
+        status: 'cancelled'
+      })
+      .exec();
+
+    if (cancelledWebinars.length > 0) {
+      this.logInfo(`Found ${cancelledWebinars.length} cancelled webinar(s) in timeslot ${timeslotId}. These have freed up their timeslots for new bookings.`);
+    }
+
     const existingWebinars = await this.webinarModel
       .find(existingWebinarsQuery)
       .populate('timeslot')
       .exec();
+
+    this.logInfo(`Checking for overlaps with ${existingWebinars.length} active webinar(s) in timeslot ${timeslotId}`);
 
     // Check each existing webinar for overlap
     for (const existingWebinar of existingWebinars) {
@@ -167,13 +182,27 @@ export class WebinarValidationService extends BaseService<WebinarValidationServi
       return [];
     }
 
+    // First check for cancelled webinars - these free up their slots
+    const cancelledWebinars = await this.webinarModel
+      .find({ 
+        timeslot: timeslot,
+        status: 'cancelled'
+      })
+      .exec();
+
+    if (cancelledWebinars.length > 0) {
+      this.logInfo(`Found ${cancelledWebinars.length} cancelled webinar(s) in timeslot ${timeslotId}. Their slots are now available.`);
+    }
+
     const existingWebinars = await this.webinarModel
       .find({ 
         timeslot: timeslot,
-        status: { $ne: 'cancelled' }
+        status: { $ne: 'cancelled' } // Only consider active webinars - cancelled ones free up their slots
       })
       .populate('timeslot')
       .exec();
+
+    this.logInfo(`Calculating availability for timeslot ${timeslotId}: ${existingWebinars.length} active webinar(s) occupying slots`);
 
     // Create a list of occupied time ranges
     const occupiedRanges: { start: Date; end: Date }[] = [];

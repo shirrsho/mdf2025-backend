@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEnum, IsUrl, IsDate, Min } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsNumber, IsUrl, IsDate, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { WebinarStatus } from '@/modules/enum';
 
 export class CreateWebinarDto {
   @ApiProperty({
@@ -88,17 +87,6 @@ export class CreateWebinarDto {
   @IsOptional()
   @IsString()
   readonly category?: string;
-
-  @ApiProperty({
-    required: false,
-    example: 'scheduled',
-    description: 'Webinar status',
-    enum: WebinarStatus,
-    default: WebinarStatus.SCHEDULED,
-  })
-  @IsOptional()
-  @IsEnum(WebinarStatus)
-  readonly status?: WebinarStatus;
 
   @ApiProperty({
     required: false,

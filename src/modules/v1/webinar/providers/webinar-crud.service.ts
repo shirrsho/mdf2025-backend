@@ -3,6 +3,7 @@ import {
   HttpException,
   Injectable,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -16,9 +17,10 @@ import {
 } from '../dtos';
 import { OptionDto } from '@/modules/dto';
 import { WebinarValidationService } from './webinar-validation.service';
+import { WebinarStatus } from '@/modules/enum';
 
 @Injectable()
-export class WebinarCrudService extends BaseService<WebinarCrudService> {
+export class WebinarCrudService extends BaseService<WebinarDocument> {
   constructor(
     @InjectModel(Webinar.name)
     private readonly webinarModel: Model<WebinarDocument>,
@@ -229,10 +231,16 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
     updateWebinarDto: UpdateWebinarDto,
   ): Promise<WebinarDocument> {
     try {
+      const existingWebinar = await this.findById(id);
+      
+      // Log status change to cancelled - this will free up the timeslot
+      if (updateWebinarDto.status === WebinarStatus.CANCELLED && 
+          existingWebinar.status !== WebinarStatus.CANCELLED) {
+        this.logInfo(`Webinar ${id} status changed to CANCELLED. Timeslot ${existingWebinar.timeslot} will be freed for new bookings.`);
+      }
+
       // If duration, timeslot, or scheduledStartTime is being updated, validate
       if (updateWebinarDto.duration || updateWebinarDto.timeslot || updateWebinarDto.scheduledStartTime) {
-        const existingWebinar = await this.findById(id);
-        
         const newDuration = updateWebinarDto.duration 
           ? this.webinarValidationService.validateWebinarDuration(updateWebinarDto.duration)
           : existingWebinar.duration;
@@ -281,12 +289,19 @@ export class WebinarCrudService extends BaseService<WebinarCrudService> {
   }
 
   async delete(id: string): Promise<WebinarDocument> {
+    const webinarToDelete = await this.findById(id);
+    
+    // Log deletion - this will automatically free up the timeslot
+    this.logInfo(`Deleting webinar ${id}. Timeslot ${webinarToDelete.timeslot} will be freed for new bookings.`);
+    
     const deletedWebinar = await this.webinarModel
       .findByIdAndDelete(id)
       .exec();
     if (!deletedWebinar) {
       throw new NotFoundException('Webinar not found');
     }
+    
+    this.logInfo(`Webinar ${id} successfully deleted. Timeslot is now available for new bookings.`);
     return deletedWebinar;
   }
 }
