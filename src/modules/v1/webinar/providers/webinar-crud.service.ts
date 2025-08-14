@@ -30,7 +30,7 @@ export class WebinarCrudService extends BaseService<WebinarDocument> {
   }
 
   buildWebinarWhereClause(query: QueryWebinarDto): Record<string, any> {
-    const { title, timeslot, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { title, host, timeslot, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
@@ -46,6 +46,9 @@ export class WebinarCrudService extends BaseService<WebinarDocument> {
     // Exact match filters
     if (timeslot) {
       whereClause.timeslot = timeslot;
+    }
+    if (host) {
+      whereClause.host = host;
     }
 
     const numberRangeFields = [
