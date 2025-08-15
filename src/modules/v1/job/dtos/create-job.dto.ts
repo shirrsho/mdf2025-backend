@@ -28,7 +28,7 @@ export class CreateJobDto {
   })
   @IsNotEmpty({ message: 'Company ID cannot be empty' })
   @IsString()
-  readonly companyId: string;
+  readonly company: string;
 
   @ApiProperty({
     required: true,

@@ -26,12 +26,12 @@ export class JobCrudService extends BaseService<JobCrudService> {
   }
 
   buildJobWhereClause(query: QueryJobDto): Record<string, any> {
-    const { title, companyId, minTotal, maxTotal, createdAfter, createdBefore } =
+    const { title, company, minTotal, maxTotal, createdAfter, createdBefore } =
       query;
 
     const whereClause: Record<string, any> = {};
 
-    const exactFilters = { companyId };
+    const exactFilters = { company };
     Object.entries(exactFilters).forEach(([key, value]) => {
       if (value) {
         whereClause[key] = value;
@@ -134,6 +134,7 @@ export class JobCrudService extends BaseService<JobCrudService> {
     const [jobs, count] = await Promise.all([
       this.jobModel
         .find(whereClause)
+        .populate('company', 'id name')
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
@@ -166,6 +167,7 @@ export class JobCrudService extends BaseService<JobCrudService> {
     const [jobs, count] = await Promise.all([
       this.jobModel
         .find(whereClause)
+        .populate('company', 'id name')
         .sort(sortOptions)
         .skip(skip)
         .limit(limit)
@@ -180,7 +182,8 @@ export class JobCrudService extends BaseService<JobCrudService> {
   }
 
   async findById(id: string): Promise<JobDocument> {
-    const job = await this.jobModel.findById(id).exec();
+    const job = await this.jobModel.findById(id)
+        .populate('company', 'id name').exec();
     if (!job) {
       throw new NotFoundException('Job not found');
     }
@@ -188,7 +191,8 @@ export class JobCrudService extends BaseService<JobCrudService> {
   }
 
   async findByIdPublic(id: string): Promise<JobDocument> {
-    const job = await this.jobModel.findById(id).exec();
+    const job = await this.jobModel.findById(id)
+        .populate('company', 'id name').exec();
     if (!job) {
       throw new NotFoundException('Job not found');
     }

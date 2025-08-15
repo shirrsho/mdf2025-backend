@@ -34,7 +34,7 @@ export class Job {
     type: MongooseSchema.Types.ObjectId, 
     ref: 'Company' 
   })
-  companyId: MongooseSchema.Types.ObjectId;
+  company: MongooseSchema.Types.ObjectId;
 
   @ApiProperty({
     example: 'Dhaka, Bangladesh',

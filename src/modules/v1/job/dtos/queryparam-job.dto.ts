@@ -15,7 +15,7 @@ export class QueryJobDto {
   })
   @IsOptional()
   @IsString()
-  companyId?: string;
+  company?: string;
 
   @ApiPropertyOptional({ description: 'Minimum total' })
   @IsOptional()
