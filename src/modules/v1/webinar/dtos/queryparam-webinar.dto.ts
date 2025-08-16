@@ -11,6 +11,16 @@ export class QueryWebinarDto {
   title?: string;
 
   @ApiPropertyOptional({
+    description: 'Current time to filter upcoming webinars',
+    type: String,
+    format: 'date-time',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  currentTime?: Date;
+
+  @ApiPropertyOptional({
     description: 'Filter by timeslot ID',
   })
   @IsOptional()

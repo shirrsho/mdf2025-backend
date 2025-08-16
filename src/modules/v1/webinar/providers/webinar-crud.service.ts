@@ -177,15 +177,25 @@ export class WebinarCrudService extends BaseService<WebinarDocument> {
     const {
       page = 1,
       limit = 10,
-      sortBy = 'createdAt',
-      sortOrder = 'DESC',
+      currentTime
     } = queryParams;
 
     const skip = ((page > 1 ? page : 1) - 1) * (limit > 0 ? limit : 10);
 
     const whereClause = this.buildWebinarWhereClause(queryParams);
 
-    const sortOptions: any = { [sortBy]: sortOrder === 'ASC' ? 1 : -1 };
+    // Add condition to filter webinars that haven't ended yet (upcoming or currently running)
+    if(currentTime) {
+    whereClause.$expr = {
+      $gte: [
+        { $add: ['$scheduledStartTime', { $multiply: ['$duration', 60000] }] }, // Convert duration from minutes to milliseconds
+        new Date(currentTime)
+      ]
+    };
+  }
+
+    // Sort by scheduledStartTime in ascending order to show earliest webinars first
+    const sortOptions: any = { scheduledStartTime: 1 };
 
     const [webinars, count] = await Promise.all([
       this.webinarModel
